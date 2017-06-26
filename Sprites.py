@@ -43,12 +43,14 @@ class Player(pygame.sprite.Sprite):
             player_laser.add(pLaser)
             player_shoot_sound.play()
 
+    #Moves the player offscreen all health is depleated
     def death(self):
         self.dead = True
         self.death_timer = pygame.time.get_ticks()
         self.rect.center = (WIDTH + 100, HEIGHT + 100)
 
     def update(self):
+        #Keeps the player offsceen for 1.5 seconds
         if self.dead and pygame.time.get_ticks() - self.death_timer > 1500:
             self.dead = False
             self.rect.centerx = WIDTH / 2
@@ -150,6 +152,7 @@ class EnemySmall(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         self.rect.centery += self.speedy
 
+        #Stops the ship from continuing to move down
         if not self.drop_not_complete:
             self.speedy = 0
 
@@ -158,6 +161,7 @@ class EnemySmall(pygame.sprite.Sprite):
             self.last_move = now
             self.rect.centerx += self.speedx
         
+        #Ship is only allowed to move down until it reaches a certain point
         if self.rect.bottom > HEIGHT * self.y_pct and self.drop_not_complete:
             self.drop_not_complete = False
             self.speedy = 0
@@ -174,6 +178,7 @@ class EnemySmall(pygame.sprite.Sprite):
                 ship.speedx = -1
                 ship.speedy = 5
 
+        #Checks to see if it is allowed to shoot
         if now - self.last_check > 900 and not self.can_shoot:
             self.last_check = now
             self.check_shoot()
@@ -182,7 +187,8 @@ class EnemySmall(pygame.sprite.Sprite):
                 self.can_shoot = True
 
         hits = []
-
+        
+        #Shoots every 1-5 seconds
         if now - self.last_shot > random.randint(1000, 5000) and self.can_shoot:
             self.last_shot = now
             self.shoot()
@@ -226,6 +232,7 @@ class EnemyMedium(pygame.sprite.Sprite):
         now = pygame.time.get_ticks()
         self.rect.centery += self.speedy
 
+        #Stops the ship from moving down after a certain point
         if not self.drop_not_complete:
             self.speedy = 0
 
@@ -234,6 +241,7 @@ class EnemyMedium(pygame.sprite.Sprite):
             self.last_move = now
             self.rect.centerx += self.speedx
         
+        #Stops the ship from moving down after a certain point
         if self.rect.bottom > HEIGHT * self.y_pct and self.drop_not_complete:
             self.drop_not_complete = False
             self.speedy = 0
@@ -250,6 +258,7 @@ class EnemyMedium(pygame.sprite.Sprite):
                 ship.speedx = -1
                 ship.speedy = 5
                 
+        #Checks to see if the ship can shoot
         if now - self.last_check > 900 and not self.can_shoot:
             self.last_check = now
             self.check_shoot()
@@ -259,6 +268,7 @@ class EnemyMedium(pygame.sprite.Sprite):
 
         hits = []
 
+        #Ship shoots every 1-5 seconds
         if now - self.last_shot > random.randint(1000, 5000) and self.can_shoot:
             self.last_shot = now
             self.shoot()
@@ -306,9 +316,11 @@ class EnemyBig(pygame.sprite.Sprite):
         self.rect.centerx += self.speedx
         self.rect.centery += self.speedy
 
+        #Stops the ship from moving down after a certain point
         if not self.drop_not_complete:
             self.speedy = 0
         
+        #Stops the ship from moving down after a certain point
         if self.rect.bottom > HEIGHT * 0.25 and self.drop_not_complete:
             self.drop_not_complete = False
             self.speedy = 0
@@ -323,6 +335,7 @@ class EnemyBig(pygame.sprite.Sprite):
             self.speedx = -2
             self.speedy = 5
 
+        #Ship shoots every 1-3 seconds
         if now - self.last_shot > random.randint(1000, 3000):
             self.last_shot = now
             self.shoot()
@@ -358,6 +371,7 @@ class ExplosionAnimation(pygame.sprite.Sprite):
         self.last_update = pygame.time.get_ticks()
         self.speed = 65
 
+    #Goes though every picture in the explosion list to have it animated
     def update(self):
         now = pygame.time.get_ticks()
         if now - self.last_update > self.speed:
