@@ -51,7 +51,7 @@ repair_sound = pygame.mixer.Sound(path.join(sounds, "Powerup3.wav"))
 with open("highscore.txt", "r") as file:
     highscore = int(file.read())
 
-
+#Game initializations
 running = True
 round_almost_over = False
 game_over = True
@@ -61,6 +61,7 @@ score = 0
 while running:
     clock.tick(FPS)
     
+    #Goes to the main screen
     if game_over:
         if score > highscore:
             highscore = score
@@ -101,6 +102,7 @@ while running:
                 explosion_sound_boss.play()
                 ship_explosion = ExplosionAnimation(hit.rect.center, explosion["boss"], 9)
                 sprites.add(ship_explosion)
+            #Chance of dropping a repair kit
             if random.random() > 0.9:
                 wrench = RepairShip(hit.rect.center)
                 sprites.add(wrench)
@@ -109,7 +111,7 @@ while running:
             enemy_hit_sound.play()
         hit.health -= 1
         
-
+    #Player hit by an enemy laser
     hits = pygame.sprite.spritecollide(player, enemy_laser, True)
     for hit in hits:
         if player.health > 1:
@@ -124,12 +126,14 @@ while running:
             player.lives -= 1
             player.health = 8
 
+    #Player laser hits an enemy laser
     hits = pygame.sprite.groupcollide(player_laser, enemy_laser, True, True)
     for hit in hits:
         explosion_sound_lasers.play()
         laser_explosion = ExplosionAnimation(hit.rect.center, explosion["laser"], 9)
         sprites.add(laser_explosion)
 
+    #Player ship hits a repair kit
     hits = pygame.sprite.spritecollide(player, repair, True)
     for hit in hits:
         repair_sound.play()
@@ -138,6 +142,7 @@ while running:
         if player.health < 7:
             player.health += 2
 
+    #Player ship hits an enemy ship
     hits = pygame.sprite.spritecollide(player, enemy_sprites, False)
     for hit in hits:
         player.heatlh = 0
@@ -166,12 +171,14 @@ while running:
         round_almost_over = False
         player.kill()
 
+    #Spawns a new wave of enemies after the boss is defeated
     if len(enemy_sprites) == 0 and round_almost_over:
         spawn_enemies()
         for enemy in enemy_sprites:
             enemy.health += 1
         round_almost_over = False
 
+    #Spawns the boss when a wave of enemies is defeated
     if len(enemy_sprites) == 0 and not round_almost_over:
         boss = EnemyBig()
         sprites.add(boss)
@@ -179,7 +186,7 @@ while running:
         round_almost_over = True
  
     sprites.update()
-    #Draw
+    #Draws everything to the screen
     screen.fill(BLACK)
     screen.blit(background, background_rect)
     sprites.draw(screen)
