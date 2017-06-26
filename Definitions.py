@@ -3,6 +3,7 @@ from Sprites import *
 
 pygame.init()
 
+#Creates a wave of enemies
 def spawn_enemies():
     for i in range(1, 7):
         for j in range(0, 3):
@@ -18,6 +19,7 @@ def spawn_enemies():
         sprites.add(enemy)
         enemy_sprites.add(enemy)
 
+#Draws text to the screen
 def draw_text(screen, x, y, text, size):
     font_name = pygame.font.match_font("arial")
     font = pygame.font.Font(font_name, size)
@@ -26,6 +28,7 @@ def draw_text(screen, x, y, text, size):
     textbox_rect.midtop = (x, y)
     screen.blit(textbox, textbox_rect)
 
+#Creates the health bar
 def draw_health_bar(screen, x, y, health):
     if health < 0:
         health = 0
@@ -37,6 +40,7 @@ def draw_health_bar(screen, x, y, health):
     pygame.draw.rect(screen, LIGHT_BLUE, inside_rect)
     pygame.draw.rect(screen, WHITE, outside_rect, 2)
 
+#Shows the player's lives
 def draw_lives(screen, x, y, lives, image):
     for i in range(lives):
         image_rect = image.get_rect()
@@ -44,6 +48,7 @@ def draw_lives(screen, x, y, lives, image):
         image_rect.y = y
         screen.blit(image, image_rect)
 
+#Shows the main screen of the game
 def main_screen(background, background_rect, screen, highscore, clock):
     screen.blit(background, background_rect)
     draw_text(screen, WIDTH / 2, 20, "High Score: %d" % (highscore), 16)
