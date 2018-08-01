@@ -56,6 +56,7 @@ running = True
 round_almost_over = False
 game_over = True
 score = 0
+round_count = 0
 
 #Game loop
 while running:
@@ -77,6 +78,7 @@ while running:
         sprites.add(player)
         spawn_enemies()
         score = 0
+        round_count = 0
         
     #Events
     for event in pygame.event.get():
@@ -173,14 +175,16 @@ while running:
 
     #Spawns a new wave of enemies after the boss is defeated
     if len(enemy_sprites) == 0 and round_almost_over:
+        round_count += 1
         spawn_enemies()
         for enemy in enemy_sprites:
-            enemy.health += 1
+            enemy.health += round_count
         round_almost_over = False
 
     #Spawns the boss when a wave of enemies is defeated
     if len(enemy_sprites) == 0 and not round_almost_over:
         boss = EnemyBig()
+        boss.health += round_count
         sprites.add(boss)
         enemy_sprites.add(boss)
         round_almost_over = True
