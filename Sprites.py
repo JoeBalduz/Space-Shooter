@@ -38,7 +38,7 @@ class Player(pygame.sprite.Sprite):
     def shoot(self):
         #Only one player laser can be on screen at any time
         if len(player_laser) == 0:
-            pLaser = PlayerLaser(self.rect.centerx, self.rect.centery)
+            pLaser = PlayerLaser(self.rect.centerx, self.rect.centery, "laserGreen.png", -10)
             sprites.add(pLaser)
             player_laser.add(pLaser)
             player_shoot_sound.play()
@@ -75,17 +75,22 @@ class Player(pygame.sprite.Sprite):
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
 
-#Laser shot by the user
-class PlayerLaser(pygame.sprite.Sprite):
-    def __init__(self, x, y):
+#Laser class to inherit from
+class Laser(pygame.sprite.Sprite):
+    def __init__(self, x, imageName, speed):
         pygame.sprite.Sprite.__init__(self)
-        player_laser_image = pygame.image.load(path.join(images, "laserGreen.png"))
-        self.image = player_laser_image
+        laser_image = pygame.image.load(path.join(images, imageName))
+        self.image = laser_image
         self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.rect.centerx = x
+        self.speedy = speed
+
+#Laser shot by the user
+class PlayerLaser(Laser):
+    def __init__(self, x, y, imageName, speed):
+        Laser.__init__(self, x, imageName, speed)
         self.rect.bottom = y
-        self.speedy = -10
 
     def update(self):
         self.rect.centery += self.speedy
@@ -94,15 +99,9 @@ class PlayerLaser(pygame.sprite.Sprite):
 
 #Laser shot by enemy ships
 class EnemyLaser(pygame.sprite.Sprite):
-    def __init__(self, x, y):
-        pygame.sprite.Sprite.__init__(self)
-        enemy_laser_image = pygame.image.load(path.join(images, "laserRed.png")).convert()
-        self.image = enemy_laser_image
-        self.image.set_colorkey(BLACK)
-        self.rect = self.image.get_rect()
-        self.rect.centerx = x
+    def __init__(self, x, y, imageName, speed):
+        Laser.__init__(self, x, imageName, speed)
         self.rect.top = y
-        self.speedy = 10
 
     def update(self):
         self.rect.centery += self.speedy
@@ -197,7 +196,7 @@ class EnemySmall(pygame.sprite.Sprite):
             self.kill()
             
     def shoot(self):
-        eLaser = EnemyLaser(self.rect.centerx, self.rect.centery)
+        eLaser = EnemyLaser(self.rect.centerx, self.rect.centery, "laserRed.png", 10)
         sprites.add(eLaser)
         enemy_laser.add(eLaser)
         enemy_shoot_sound.play()
@@ -277,8 +276,8 @@ class EnemyMedium(pygame.sprite.Sprite):
             self.kill()
 
     def shoot(self):
-        eLaser1 = EnemyLaser(self.rect.centerx - 40, self.rect.centery)
-        eLaser2 = EnemyLaser(self.rect.centerx + 40, self.rect.centery)
+        eLaser1 = EnemyLaser(self.rect.centerx - 40, self.rect.centery, "laserRed.png", 10)
+        eLaser2 = EnemyLaser(self.rect.centerx + 40, self.rect.centery, "laserRed.png", 10)
         sprites.add(eLaser1)
         sprites.add(eLaser2)
         enemy_laser.add(eLaser1)
@@ -344,10 +343,10 @@ class EnemyBig(pygame.sprite.Sprite):
             self.kill()
 
     def shoot(self):
-        eLaser1 = EnemyLaser(self.rect.centerx - 55, self.rect.bottom - 20)
-        eLaser2 = EnemyLaser(self.rect.centerx + 55, self.rect.bottom - 20)
-        eLaser3 = EnemyLaser(self.rect.centerx - 105, self.rect.bottom - 20)
-        eLaser4 = EnemyLaser(self.rect.centerx + 105, self.rect.bottom - 20)
+        eLaser1 = EnemyLaser(self.rect.centerx - 55, self.rect.bottom - 20, "laserRed.png", 10)
+        eLaser2 = EnemyLaser(self.rect.centerx + 55, self.rect.bottom - 20, "laserRed.png", 10)
+        eLaser3 = EnemyLaser(self.rect.centerx - 105, self.rect.bottom - 20, "laserRed.png", 10)
+        eLaser4 = EnemyLaser(self.rect.centerx + 105, self.rect.bottom - 20, "laserRed.png", 10)
         sprites.add(eLaser1)
         sprites.add(eLaser2)
         sprites.add(eLaser3)
